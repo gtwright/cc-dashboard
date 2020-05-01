@@ -9,10 +9,10 @@ const font2 = '"Noto Sans",sans-serif';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#42404d",
+      main: "#1b5e20",
     },
     secondary: {
-      main: "#a26c1a",
+      main: "#757575",
     },
     error: {
       main: red.A400,

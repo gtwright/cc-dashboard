@@ -10,7 +10,14 @@ export default function Footer() {
         sm={12}
         style={{ display: "flex", justifyContent: "space-evenly" }}
       >
-        <div>Footer Message</div>
+        <div>
+          {" "}
+          COVID data from the{" "}
+          <a target="_blank" href="https://covidtracking.com/data">
+            COVID Tracking Project
+          </a>{" "}
+          API
+        </div>
       </Grid>
     </Grid>
   );

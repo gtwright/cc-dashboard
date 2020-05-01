@@ -1,35 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
-import { gql } from "@apollo/client";
-import { useQuery, NetworkStatus } from "@apollo/client";
 import { withApollo } from "../utils/apollo";
 import Layout from "../components/Layout";
-import Loading from "../components/Loading";
-
-const EVENT_QUERY = gql`
-  query($first: Int, $offset: Int) {
-    Event(
-      first: $first
-      offset: $offset
-      filter: { image_url_not_contains: "generic" }
-    ) {
-      _id
-      title
-      image_url
-    }
-  }
-`;
-
-const queryVars = {
-  first: 1,
-  offset: Math.floor(Math.random() * 100),
-};
+import CovidDashQuery from "../components/CovidDashQuery";
+import CultureQuery from "../components/CultureQuery";
+import StateSelect from "../components/StateSelect";
 
 function Index() {
-  const { data, loading, error } = useQuery(EVENT_QUERY, {
-    variables: queryVars,
+  const [stateSelection, setStateSelection] = useState({
+    name: "Massachusetts",
+    abbreviation: "MA",
   });
+
+  const handleChange = (v) => {
+    setStateSelection(v);
+  };
+
   return (
     <Layout>
       <Container
@@ -40,17 +27,13 @@ function Index() {
           alignItems: "center",
         }}
       >
-        <Box my={2} suppressHydrationWarning={true}>
-          {loading && <Loading />}
-
-          {data &&
-            data?.Event.map((event) => (
-              <img
-                key={event._id}
-                src={event.image_url}
-                style={{ width: "100%" }}
-              />
-            ))}
+        <Box my={2} suppressHydrationWarning={true} width="100%">
+          <StateSelect
+            stateSelection={stateSelection}
+            handleChange={handleChange}
+          />
+          <CultureQuery stateSelection={stateSelection} />
+          <CovidDashQuery stateSelection={stateSelection} />
         </Box>
       </Container>
     </Layout>
