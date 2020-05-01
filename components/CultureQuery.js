@@ -4,6 +4,7 @@ const videos = [
   { state: "MA", url: "https://www.youtube.com/watch?v=q9AFG6MUepY" },
   { state: "MA", url: "https://www.youtube.com/watch?v=yE0XYILpDOc" },
   { state: "SC", url: "https://www.youtube.com/watch?v=uytxdWnTrXg" },
+  { state: "ID", url: "https://www.youtube.com/watch?v=wo4rAJQWles&t=100" },
 ];
 
 const pickRandomMediaUrl = (mediaArray) => {
@@ -18,7 +19,7 @@ const CultureQuery = ({ stateSelection }) => {
   );
   const mediaUrl = pickRandomMediaUrl(stateMedia);
   if (mediaUrl) return <ReactPlayer url={mediaUrl} />;
-  return <div>No results</div>;
+  return <div>No video</div>;
 };
 
 export default CultureQuery;
