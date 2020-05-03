@@ -1,6 +1,5 @@
 import React from "react";
-import { gql } from "@apollo/client";
-import { useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import Loading from "../components/Loading";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -14,6 +13,7 @@ import {
   VictoryTooltip,
   VictoryVoronoiContainer,
   VictoryClipContainer,
+  VictoryTheme,
 } from "victory";
 
 const formatResponseDate = (response) => {
@@ -26,7 +26,7 @@ const formatResponseDate = (response) => {
 };
 
 const Query = gql`
-  query($stateInput: String) {
+  query {
     covidUSCurrent @rest(type: "US", path: "us/current.json") {
       positive
     }
@@ -80,6 +80,12 @@ const CovidDashQuery = ({ stateSelection }) => {
                         groupComponent={
                           <VictoryClipContainer clipId="covidStateHistory" />
                         }
+                      />
+                      <VictoryAxis tickCount={4} />
+                      <VictoryAxis
+                        dependentAxis
+                        tickCount={4}
+                        tickFormat={(t) => `${Math.round(t / 1000)}k`}
                       />
                     </VictoryChart>
                   </CardContent>
