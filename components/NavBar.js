@@ -33,6 +33,9 @@ export default function Bar() {
             </Link>
           </Typography>
           <>
+            <Button color="inherit" component={Link} href="/submit">
+              Submit
+            </Button>
             <Button color="inherit" component={Link} href="/about">
               About
             </Button>

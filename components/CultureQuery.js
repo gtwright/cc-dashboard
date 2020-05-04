@@ -1,12 +1,10 @@
+import { useState } from "react";
 import ReactPlayer from "react-player";
 import { gql, useQuery } from "@apollo/client";
+import Button from "@material-ui/core/Button";
 
-const videos = [
-  { state: "MA", url: "https://www.youtube.com/watch?v=q9AFG6MUepY" },
-  { state: "MA", url: "https://www.youtube.com/watch?v=yE0XYILpDOc&t=212" },
-  { state: "SC", url: "https://www.youtube.com/watch?v=uytxdWnTrXg" },
-  { state: "ID", url: "https://www.youtube.com/watch?v=wo4rAJQWles&t=100" },
-];
+const d = new Date();
+const expires = d.toJSON();
 
 const pickRandomMediaUrl = (mediaArray) => {
   if (!mediaArray || mediaArray.length == 0) return null;
@@ -15,26 +13,58 @@ const pickRandomMediaUrl = (mediaArray) => {
 };
 
 const Query = gql`
-  query($state: [States!]) {
-    culturalMediaItems(where: { states_in: $state }) {
+  query($state: States, $expires: Date) {
+    culturalMediaItems(
+      where: {
+        AND: [
+          { states: $state }
+          { OR: [{ expires_gte: $expires }, { expires: null }] }
+        ]
+      }
+    ) {
       id
       url
       states
+      stage
     }
   }
 `;
 
 const CultureQuery = ({ stateSelection }) => {
+  const [mediaIndex, setMediaIndex] = useState(0);
+
   const { data, loading, error } = useQuery(Query, {
-    variables: { state: ["SC"] },
+    variables: { state: stateSelection.abbreviation, expires: expires },
+    onCompleted: () => {
+      setMediaIndex(Math.floor(Math.random() * data.culturalMediaItems.length));
+    },
   });
-  console.log(data);
-  const stateMedia = videos.filter(
-    (x) => x.state == stateSelection.abbreviation
-  );
+  const stateMedia = data && data.culturalMediaItems;
+
   const mediaUrl = pickRandomMediaUrl(stateMedia);
-  if (mediaUrl) return <ReactPlayer url={mediaUrl} />;
-  return <div>No video</div>;
+  return (
+    <div style={{ minHeight: 300 }}>
+      {mediaUrl ? (
+        <div suppressHydrationWarning={true}>
+          <ReactPlayer
+            playing
+            muted
+            controls={true}
+            url={stateMedia[mediaIndex].url}
+          />
+          <Button
+            onClick={() => {
+              setMediaIndex((mediaIndex + 1) % stateMedia.length);
+            }}
+          >
+            Show me another!
+          </Button>
+        </div>
+      ) : (
+        <div suppressHydrationWarning={true}>No video</div>
+      )}
+    </div>
+  );
 };
 
 export default CultureQuery;

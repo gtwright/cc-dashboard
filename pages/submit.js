@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
+import Alert from "@material-ui/lab/Alert";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
 import { withApollo } from "../utils/apollo";
@@ -63,8 +64,21 @@ function Submit() {
         }}
       >
         <Box my={2} suppressHydrationWarning={true} width="100%">
-          {mutationError && <div>Error in submission. Please try again.</div>}
-          {completed && <div>Successful!</div>}
+          {mutationError && (
+            <div>
+              There was a problem with the form. Please try again later.
+            </div>
+          )}
+          {completed && (
+            <Alert
+              onClose={() => {
+                setCompleted(false);
+              }}
+            >
+              Thanks for the submission! A moderator will review it before it
+              goes live
+            </Alert>
+          )}
           <form onSubmit={handleSubmit(onSubmit)}>
             <div>
               <TextField
@@ -88,10 +102,15 @@ function Submit() {
               />
             </div>
             <div>
-              <FormControl error={!!errors.states}>
+              <FormControl
+                error={!!errors.states}
+                variant="outlined"
+                style={{ minWidth: 100 }}
+              >
+                <InputLabel id="state-label">State</InputLabel>
                 <Controller
                   as={
-                    <Select variant="outlined">
+                    <Select labelId="state-label" label="State">
                       {statesJson.map((s) => (
                         <MenuItem key={s.abbreviation} value={s.abbreviation}>
                           {s.name}
@@ -108,22 +127,6 @@ function Submit() {
                   {errors?.states?.message}
                 </FormHelperText>
               </FormControl>
-              {/* <Select
-                error={!!errors.state}
-                name="state"
-                variant="outlined"
-                // margin="normal"
-                // helperText={errors.state ? errors.state.message : " "}
-                inputRef={register({
-                  required: true,
-                })}
-              >
-                {statesJson.map((s) => (
-                  <MenuItem key={s.abbreviation} value={s.abbreviation}>
-                    {s.name}
-                  </MenuItem>
-                ))}
-              </Select> */}
             </div>
             <div>
               <TextField
@@ -144,6 +147,7 @@ function Submit() {
                 inputRef={register()}
               />
             </div>
+
             <Button
               type="submit"
               variant="contained"
