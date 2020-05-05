@@ -25,7 +25,7 @@ const formatResponseDate = (response) => {
   });
 };
 
-const Query = gql`
+const QueryState = gql`
   query {
     covidUSCurrent @rest(type: "US", path: "us/current.json") {
       positive
@@ -42,7 +42,25 @@ const Query = gql`
   }
 `;
 
+const QueryAll = gql`
+  query {
+    covidUSCurrent @rest(type: "US", path: "us/current.json") {
+      positive
+    }
+    covidStateHistory @rest(type: "State", path: "states/daily.json") {
+      date
+      state
+      positive
+      totalTestResults
+      death
+      hospitalized
+    }
+  }
+`;
+
 const CovidDashQuery = ({ stateSelection }) => {
+  const Query = stateSelection.abbreviation == "US" ? QueryAll : QueryState;
+
   const { data, loading, error } = useQuery(Query, {
     variables: { stateInput: stateSelection.abbreviation },
   });

@@ -13,6 +13,12 @@ function About() {
           <Typography variant="h4" component="h1" gutterBottom>
             About {process.env.SITE_NAME}
           </Typography>
+          <div>
+            If you're like us, you're obsessively checking dashboards to get
+            updates on COVID19. Might as well get a little culture with that
+            data. Pick a state and you'll get a video along with your COVID19
+            updates. Stay healthy!
+          </div>
         </Box>
       </Container>
     </Layout>

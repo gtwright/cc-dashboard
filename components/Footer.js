@@ -14,9 +14,13 @@ export default function Footer() {
           {" "}
           COVID data from the{" "}
           <a target="_blank" href="https://covidtracking.com/data">
-            COVID Tracking Project
+            COVID Tracking Project.
           </a>{" "}
-          API
+          All media copyright respective owners. Open source{" "}
+          <a href="https://github.com/gtwright/cc-dashboard" target="_blank">
+            codebase on GitHub
+          </a>
+          .
         </div>
       </Grid>
     </Grid>
