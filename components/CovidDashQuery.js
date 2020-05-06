@@ -16,6 +16,11 @@ import {
   VictoryTheme,
 } from "victory";
 
+function formatNumber(num) {
+  if (!num) return "No Data";
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+}
+
 const formatResponseDate = (response) => {
   return response.map((x) => {
     const d = x.date.toString();
@@ -27,10 +32,7 @@ const formatResponseDate = (response) => {
 
 const QueryState = gql`
   query {
-    covidUSCurrent @rest(type: "US", path: "us/current.json") {
-      positive
-    }
-    covidStateHistory(state: $stateInput)
+    covidHistory(state: $stateInput)
       @rest(type: "State", path: "states/:state/daily.json") {
       date
       state
@@ -38,22 +40,20 @@ const QueryState = gql`
       totalTestResults
       death
       hospitalized
+      lastUpdateEt
     }
   }
 `;
 
 const QueryAll = gql`
   query {
-    covidUSCurrent @rest(type: "US", path: "us/current.json") {
-      positive
-    }
-    covidStateHistory @rest(type: "State", path: "states/daily.json") {
+    covidHistory @rest(type: "US", path: "us/daily.json") {
       date
-      state
       positive
       totalTestResults
       death
       hospitalized
+      lastUpdateEt
     }
   }
 `;
@@ -65,101 +65,105 @@ const CovidDashQuery = ({ stateSelection }) => {
     variables: { stateInput: stateSelection.abbreviation },
   });
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        width: "100%",
+      }}
+    >
       {data && (
-        <div>
+        <>
           <div
-            style={{ display: "flex", justifyContent: "center", padding: 20 }}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              padding: 20,
+            }}
           >
             <Typography component="h2" variant="h3">
-              Results for {stateSelection.name}
+              COVID19 Data for {stateSelection.name}
             </Typography>
           </div>
           {loading ? (
             <Loading />
           ) : (
             <Grid container spacing={3}>
-              <Grid item xs={4}>
+              <Grid item xs={7}>
                 <Card variant="outlined">
                   <CardContent>
-                    <Typography component="h2" variant="h3">
-                      Positive Cases
-                    </Typography>
                     <VictoryChart>
                       <VictoryLine
-                        data={formatResponseDate(data.covidStateHistory)}
-                        // animate={{
-                        //   duration: 2000,
-                        //   onLoad: { duration: 1000 },
-                        // }}
+                        data={formatResponseDate(data.covidHistory)}
                         x="formattedDate"
                         y="positive"
                         sortKey="formattedDate"
                         groupComponent={
-                          <VictoryClipContainer clipId="covidStateHistory" />
+                          <VictoryClipContainer clipId="covidHistory" />
                         }
                       />
-                      <VictoryAxis tickCount={4} />
+                      <VictoryAxis tickCount={2} />
                       <VictoryAxis
                         dependentAxis
                         tickCount={4}
-                        tickFormat={(t) => `${Math.round(t / 1000)}k`}
-                      />
-                    </VictoryChart>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={4}>
-                <Card variant="outlined">
-                  <CardContent>
-                    <Typography component="h2" variant="h3">
-                      Deaths
-                    </Typography>
-                    <VictoryChart>
-                      <VictoryLine
-                        data={formatResponseDate(data.covidStateHistory)}
-                        // animate={{
-                        //   duration: 2000,
-                        //   onLoad: { duration: 1000 },
-                        // }}
-                        x="formattedDate"
-                        y="death"
-                        sortKey="formattedDate"
-                        groupComponent={
-                          <VictoryClipContainer clipId="covidStateHistory" />
+                        tickFormat={(t) =>
+                          t > 1000 ? `${Math.round(t / 1000)}k` : t
                         }
                       />
                     </VictoryChart>
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={4}>
-                <Card variant="outlined">
-                  <CardContent>
-                    <Typography component="h2" variant="h3">
-                      Total Test Results
-                    </Typography>
-                    <VictoryChart>
-                      <VictoryLine
-                        data={formatResponseDate(data.covidStateHistory)}
-                        // animate={{
-                        //   duration: 2000,
-                        //   onLoad: { duration: 1000 },
-                        // }}
-                        x="formattedDate"
-                        y="totalTestResults"
-                        sortKey="formattedDate"
-                        groupComponent={
-                          <VictoryClipContainer clipId="covidStateHistory" />
-                        }
-                      />
-                    </VictoryChart>
+              <Grid item xs={5}>
+                <Card variant="outlined" style={{ height: "100%" }}>
+                  <CardContent
+                    style={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>
+                      <Typography color="textSecondary">Total Cases</Typography>
+                      <Typography component="h2" variant="h4" gutterBottom>
+                        {formatNumber(data.covidHistory[0].positive)} (
+                        {formatNumber(
+                          data.covidHistory[0].positive -
+                            data.covidHistory[1].positive
+                        )}
+                        )
+                      </Typography>
+                      <Typography color="textSecondary">
+                        Hospitalized
+                      </Typography>
+                      <Typography component="h2" variant="h4" gutterBottom>
+                        {formatNumber(data.covidHistory[0].hospitalized)}
+                      </Typography>
+                      <Typography color="textSecondary">Deaths</Typography>
+                      <Typography component="h2" variant="h4" gutterBottom>
+                        {formatNumber(data.covidHistory[0].death)}
+                      </Typography>
+                      <Typography color="textSecondary">Total Tests</Typography>
+                      <Typography component="h2" variant="h4" gutterBottom>
+                        {formatNumber(data.covidHistory[0].totalTestResults)} (
+                        {formatNumber(
+                          data.covidHistory[0].totalTestResults -
+                            data.covidHistory[1].totalTestResults
+                        )}
+                        )
+                      </Typography>
+                    </div>
+                    {data.covidHistory[0].lastUpdateEt && (
+                      <div>as of {data.covidHistory[0].lastUpdateEt}</div>
+                    )}
                   </CardContent>
                 </Card>
               </Grid>
             </Grid>
           )}
-        </div>
+        </>
       )}
     </div>
   );

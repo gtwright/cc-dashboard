@@ -12,6 +12,8 @@ function Index({ theme }) {
   const [stateSelection, setStateSelection] = useState({
     name: "All United States",
     abbreviation: "US",
+    // name: "Massachusetts",
+    // abbreviation: "MA",
   });
 
   const handleChange = (v) => {
@@ -39,6 +41,8 @@ function Index({ theme }) {
             justifyContent: "center",
             flexDirection: "column",
             alignItems: "center",
+            paddingTop: 16,
+            paddingBottom: 6,
           }}
         >
           <StateSelect
@@ -56,14 +60,16 @@ function Index({ theme }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          // backgroundColor: theme.palette.grey[300],
         }}
       >
         <Box
           my={2}
           suppressHydrationWarning={true}
           width="100%"
-          style={{ display: "flex", justifyContent: "center" }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
         >
           <CultureQuery stateSelection={stateSelection} />
         </Box>
@@ -74,7 +80,6 @@ function Index({ theme }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          // backgroundColor: theme.palette.grey[300],
         }}
       >
         <Box
