@@ -5,6 +5,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import moment from "moment";
 import {
   VictoryLine,
   VictoryChart,
@@ -90,7 +91,7 @@ const CovidDashQuery = ({ stateSelection }) => {
             <Loading />
           ) : (
             <Grid container spacing={3}>
-              <Grid item xs={7}>
+              <Grid item md={7} xs={12}>
                 <Card variant="outlined">
                   <CardContent>
                     <VictoryChart>
@@ -102,20 +103,32 @@ const CovidDashQuery = ({ stateSelection }) => {
                         groupComponent={
                           <VictoryClipContainer clipId="covidHistory" />
                         }
+                        // labels={({ datum }) => datum.positive}
+                        labelComponent={
+                          <VictoryTooltip
+                            style={{ fontSize: 10 }}
+                            renderInPortal
+                          />
+                        }
                       />
-                      <VictoryAxis tickCount={2} />
+                      <VictoryAxis
+                        tickCount={3}
+                        tickFormat={(t) => moment(t).format("MMM D")}
+                      />
                       <VictoryAxis
                         dependentAxis
                         tickCount={4}
                         tickFormat={(t) =>
-                          t > 1000 ? `${Math.round(t / 1000)}k` : t
+                          t > 1000
+                            ? `${formatNumber(Math.round(t / 1000))}k`
+                            : t
                         }
                       />
                     </VictoryChart>
                   </CardContent>
                 </Card>
               </Grid>
-              <Grid item xs={5}>
+              <Grid item md={5} xs={12}>
                 <Card variant="outlined" style={{ height: "100%" }}>
                   <CardContent
                     style={{
@@ -156,7 +169,12 @@ const CovidDashQuery = ({ stateSelection }) => {
                       </Typography>
                     </div>
                     {data.covidHistory[0].lastUpdateEt && (
-                      <div>as of {data.covidHistory[0].lastUpdateEt}</div>
+                      <div>
+                        as of{" "}
+                        {moment(data.covidHistory[0].lastUpdateEt).format(
+                          "MMM D"
+                        )}
+                      </div>
                     )}
                   </CardContent>
                 </Card>
