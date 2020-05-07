@@ -3,11 +3,17 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import statesJson from "../src/states.json";
+
+statesJson.unshift({
+  "name": "All United States",
+  "abbreviation": "US"
+});
+
 const StateSelect = ({ stateSelection, handleChange }) => {
   return (
     <Autocomplete
       id="combo-box-demo"
-      options={statesJson}
+      options={ statesJson }
       value={stateSelection}
       getOptionLabel={(option) => option.name}
       getOptionSelected={(option, value) =>
