@@ -5,20 +5,24 @@ import TextField from "@material-ui/core/TextField";
 import statesJson from "../src/states.json";
 
 statesJson.unshift({
-  "name": "All United States",
-  "abbreviation": "US"
+  name: "All United States",
+  abbreviation: "US",
 });
 
 const StateSelect = ({ stateSelection, handleChange }) => {
   return (
     <Autocomplete
       id="combo-box-demo"
-      options={ statesJson }
+      options={statesJson}
       value={stateSelection}
-      getOptionLabel={(option) => option.name}
-      getOptionSelected={(option, value) =>
-        option.abbreviation == value.abbreviation
-      }
+      getOptionSelected={(option, value) => {
+        // console.log(value);
+        return option.abbreviation == value.abbreviation;
+      }}
+      getOptionLabel={(option) => {
+        // console.log("option: ", option);
+        if (option.name) return option.name;
+      }}
       style={{ width: 300 }}
       onChange={(e, v) => handleChange(v)}
       disableClearable={true}

@@ -84,7 +84,7 @@ const CovidDashQuery = ({ stateSelection }) => {
             }}
           >
             <Typography component="h2" variant="h3">
-              COVID19 Data for {stateSelection.name}
+              COVID19 Data for {stateSelection.name || "All United States"}
             </Typography>
           </div>
           {loading ? (
@@ -94,7 +94,13 @@ const CovidDashQuery = ({ stateSelection }) => {
               <Grid item md={7} xs={12}>
                 <Card variant="outlined">
                   <CardContent>
-                    <VictoryChart>
+                    <Typography color="textSecondary">
+                      Total Cases Over Time
+                    </Typography>
+
+                    <VictoryChart
+                      padding={{ top: 10, bottom: 50, left: 50, right: 50 }}
+                    >
                       <VictoryLine
                         data={formatResponseDate(data.covidHistory)}
                         x="formattedDate"
@@ -171,9 +177,11 @@ const CovidDashQuery = ({ stateSelection }) => {
                     {data.covidHistory[0].lastUpdateEt && (
                       <div>
                         as of{" "}
-                        {moment(data.covidHistory[0].lastUpdateEt).format(
-                          "MMM D"
-                        )}
+                        {moment(
+                          data.covidHistory[0].lastUpdateEt,
+                          "MM/DD/YYYY"
+                        ).format("MMM D")}
+                        {/* {data.covidHistory[0].lastUpdateEt} */}
                       </div>
                     )}
                   </CardContent>

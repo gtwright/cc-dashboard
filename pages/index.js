@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import { withApollo } from "../utils/apollo";
@@ -8,13 +8,39 @@ import CultureQuery from "../components/CultureQuery";
 import StateSelect from "../components/StateSelect";
 import { withTheme } from "@material-ui/core/styles";
 import Link from "../components/Link";
+import { useRouter } from "next/router";
+import statesJson from "../src/states.json";
+
 function Index({ theme }) {
+  const router = useRouter();
+  const { state, id } = router.query;
+
   const [stateSelection, setStateSelection] = useState({
-    name: "All United States",
     abbreviation: "US",
-    // name: "Massachusetts",
-    // abbreviation: "MA",
+    name: "All United States",
   });
+
+  useEffect(() => {
+    //on render, check query params for state
+    const stateObj =
+      statesJson.filter((obj) => {
+        return obj.abbreviation == state;
+      })[0] || null;
+    // Always do navigations after the first render
+    if (stateObj) setStateSelection(stateObj);
+  }, []);
+
+  const didMountRef = useRef(false);
+  useEffect(() => {
+    if (didMountRef.current) {
+      const stateObj = statesJson.filter((obj) => {
+        return obj.abbreviation == stateSelection.abbreviation;
+      })[0];
+      router.push(`/?state=${stateObj.abbreviation}`, undefined, {
+        shallow: true,
+      });
+    } else didMountRef.current = true;
+  }, [stateSelection]);
 
   const handleChange = (v) => {
     setStateSelection(v);
