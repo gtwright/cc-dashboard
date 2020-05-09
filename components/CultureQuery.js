@@ -121,27 +121,25 @@ const CultureQuery = ({ stateSelection }) => {
           </div>
 
           {stateMedia.length > 1 && (
-            <>
-              <Button
-                variant="contained"
-                color="secondary"
-                disableElevation
-                onClick={() => {
-                  setMediaIndex((mediaIndex + 1) % stateMedia.length);
-                  setMediaLoaded(false);
-                }}
-                style={{ marginTop: 30 }}
-              >
-                Next, Please!
-              </Button>
-              <div style={{ fontSize: "0.8em" }}>
-                <a href={stateMedia[mediaIndex].url} target="_blank">
-                  Link to source
-                </a>
-                .
-              </div>
-            </>
+            <Button
+              variant="contained"
+              color="secondary"
+              disableElevation
+              onClick={() => {
+                setMediaIndex((mediaIndex + 1) % stateMedia.length);
+                setMediaLoaded(false);
+              }}
+              style={{ marginTop: 30 }}
+            >
+              Next, Please!
+            </Button>
           )}
+          <div style={{ fontSize: "0.8em" }}>
+            <a href={stateMedia[mediaIndex].url} target="_blank">
+              Link to source
+            </a>
+            .
+          </div>
         </div>
       )}
       {!loading && stateMedia.length == 0 && (

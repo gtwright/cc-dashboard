@@ -63,7 +63,12 @@ function Submit() {
           alignItems: "center",
         }}
       >
-        <Box my={2} suppressHydrationWarning={true} width="100%">
+        <Box
+          my={2}
+          suppressHydrationWarning={true}
+          width="100%"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           {mutationError && (
             <div>
               There was a problem with the form. Please try again later.
@@ -84,13 +89,13 @@ function Submit() {
               <TextField
                 error={!!errors.mediaUrl}
                 name="mediaUrl"
-                label="Video URL"
+                label="Media Embed URL"
                 variant="outlined"
                 margin="normal"
                 helperText={
                   errors.mediaUrl
                     ? errors.mediaUrl.message
-                    : "YouTube, Vimeo, Wistia"
+                    : "YouTube, Vimeo, Wistia, Facebook, or Soundcloud"
                 }
                 inputRef={register({
                   required: "Required",
