@@ -100,6 +100,23 @@ const CovidDashQuery = ({ stateSelection }) => {
 
                     <VictoryChart
                       padding={{ top: 10, bottom: 50, left: 50, right: 50 }}
+                      domainPadding={{ y: 30, x: 10 }}
+                      containerComponent={
+                        <VictoryVoronoiContainer
+                          labels={({ datum }) =>
+                            `${moment(datum.formattedDate).format(
+                              "MMM D"
+                            )}: ${formatNumber(datum.positive)}`
+                          }
+                          labelComponent={
+                            <VictoryTooltip
+                              constrainToVisibleArea
+                              cornerRadius={0}
+                              flyoutStyle={{ fill: "white" }}
+                            />
+                          }
+                        />
+                      }
                     >
                       <VictoryLine
                         data={formatResponseDate(data.covidHistory)}
@@ -109,7 +126,13 @@ const CovidDashQuery = ({ stateSelection }) => {
                         groupComponent={
                           <VictoryClipContainer clipId="covidHistory" />
                         }
-                        // labels={({ datum }) => datum.positive}
+                        style={{
+                          data: {
+                            stroke: "tomato",
+                            strokeWidth: ({ active }) => (active ? 4 : 2),
+                          },
+                          //   labels: { fill: "tomato" },
+                        }}
                         labelComponent={
                           <VictoryTooltip
                             style={{ fontSize: 10 }}
