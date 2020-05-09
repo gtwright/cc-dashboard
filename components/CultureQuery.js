@@ -118,10 +118,10 @@ const CultureQuery = ({ stateSelection }) => {
               width="100%"
               style={{ position: "absolute", top: 0, left: 0 }}
               onProgress={(e) =>
-                console.log({
-                  url: stateMedia[mediaIndex].url,
-                  playedSeconds: e.playedSeconds,
-                })
+                // console.log({
+                //   url: stateMedia[mediaIndex].url,
+                //   playedSeconds: e.playedSeconds,
+                // })
               }
             />
           </div>
