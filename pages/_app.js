@@ -3,6 +3,11 @@ import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../src/theme";
+import Router from "next/router";
+
+import * as gtag from "../utils/gtag";
+
+Router.events.on("routeChangeComplete", (url) => gtag.pageview(url));
 
 export default function CustomApp(props) {
   const { Component, pageProps } = props;

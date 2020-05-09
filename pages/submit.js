@@ -15,6 +15,7 @@ import { gql, useMutation } from "@apollo/client";
 import Layout from "../components/Layout";
 import statesJson from "../src/states.json";
 import localIpUrl from "local-ip-url";
+import * as gtag from "../utils/gtag";
 
 const ADD_MEDIA = gql`
   mutation($mediaUrl: String, $states: States!, $expires: Date, $ip: String) {
@@ -51,6 +52,11 @@ function Submit() {
     addMediaItem({
       variables: { ...values, ip },
     });
+    gtag.event({
+      action: "submit_form",
+      category: "Submit Event",
+      label: JSON.stringify(values),
+    });
   };
 
   return (
@@ -67,7 +73,11 @@ function Submit() {
           my={2}
           suppressHydrationWarning={true}
           width="100%"
-          style={{ display: "flex", justifyContent: "center" }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
           {mutationError && (
             <div>
