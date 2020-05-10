@@ -122,7 +122,7 @@ const CultureQuery = ({ stateSelection }) => {
                 //   url: stateMedia[mediaIndex].url,
                 //   playedSeconds: e.playedSeconds,
                 // })
-              }
+              // }
             />
           </div>
 
