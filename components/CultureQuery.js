@@ -4,6 +4,7 @@ import { gql, useQuery } from "@apollo/client";
 import Button from "@material-ui/core/Button";
 import Link from "../components/Link";
 import Loading from "../components/Loading";
+import * as gtag from "../utils/gtag";
 const d = new Date();
 const expires = d.toJSON();
 
@@ -107,8 +108,8 @@ const CultureQuery = ({ stateSelection }) => {
             }}
           >
             <ReactPlayer
-              playing={false}
-              muted={true}
+              playing={true}
+              muted={false}
               controls={true}
               onReady={() => {
                 setMediaLoaded(true);
@@ -117,12 +118,28 @@ const CultureQuery = ({ stateSelection }) => {
               height="100%"
               width="100%"
               style={{ position: "absolute", top: 0, left: 0 }}
-              // onProgress={(e) =>
-              //   // console.log({
-              //   //   url: stateMedia[mediaIndex].url,
-              //   //   playedSeconds: e.playedSeconds,
-              //   // })
-              // // }
+              onPlay={() =>
+                gtag.event({
+                  action: "media_play",
+                  category: "Media",
+                  label: stateMedia[mediaIndex].url,
+                })
+              }
+              onEnded={() =>
+                gtag.event({
+                  action: "media_ended",
+                  category: "Media",
+                  label: stateMedia[mediaIndex].url,
+                })
+              }
+              onProgress={(e) =>
+                gtag.event({
+                  action: "media_progress",
+                  category: "Media",
+                  label: stateMedia[mediaIndex].url,
+                  value: e.played,
+                })
+              }
             />
           </div>
 

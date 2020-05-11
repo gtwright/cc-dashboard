@@ -6,8 +6,13 @@ import theme from "../src/theme";
 import Router from "next/router";
 
 import * as gtag from "../utils/gtag";
+import * as pixel from "../utils/fbpix";
 
-Router.events.on("routeChangeComplete", (url) => gtag.pageview(url));
+Router.events.on("routeChangeComplete", (url) => {
+  gtag.pageview(url);
+  pixel.pageview();
+  console.log("tracking codes fired");
+});
 
 export default function CustomApp(props) {
   const { Component, pageProps } = props;
